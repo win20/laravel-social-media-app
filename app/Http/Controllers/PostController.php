@@ -2,12 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use Illuminate\Support\Str;
+use App\Http\Controllers\Controller;
 
 class PostController extends Controller
 {
+    public function delete(Request $request, Post $post)
+    {
+        if ($request->user()->cannot('delete', $post)) {
+            return 'You cannot do that';
+        }
+        $post->delete();
+
+        return redirect('/profile/' . auth()->user()->username)->with('success', 'Post successfully deleted');
+    }
+
     public function viewSinglePost(Post $post)
     {
         $post['body'] = Str::markdown($post->body);
@@ -19,7 +31,7 @@ class PostController extends Controller
         return view('create-post');
     }
 
-    public function storeNewPost(Request $request)
+    public function storeNewPost(Request $request): RedirectResponse
     {
         $incomingFields = $request->validate([
             'title' => 'required',
