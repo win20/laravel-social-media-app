@@ -10,11 +10,27 @@ use App\Http\Controllers\Controller;
 
 class PostController extends Controller
 {
+    public function update(Post $post, Request $request)
+    {
+        $incomingFields = $request->validate([
+            'title' => 'required',
+            'body' => 'required',
+        ]);
+
+        $incomingFields['title'] = strip_tags($incomingFields['title']);
+        $incomingFields['body'] = strip_tags($incomingFields['body']);
+
+        $post->update($incomingFields);
+        return back()->with('success', 'Post successfully updated');
+    }
+
+    public function showEditForm(Post $post)
+    {
+        return view('edit-post', ['post' => $post]);
+    }
+
     public function delete(Request $request, Post $post)
     {
-        if ($request->user()->cannot('delete', $post)) {
-            return 'You cannot do that';
-        }
         $post->delete();
 
         return redirect('/profile/' . auth()->user()->username)->with('success', 'Post successfully deleted');
