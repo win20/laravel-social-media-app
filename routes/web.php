@@ -42,6 +42,8 @@ Route::put('/post/{post}', [PostController::class, 'update'])->middleware('can:u
 
 // Profile routes
 Route::get('/profile/{user:username}', [UserController::class, 'profile']);
+Route::get('/profile/{user:username}/followers', [UserController::class, 'profileFollowers']);
+Route::get('/profile/{user:username}/following', [UserController::class, 'profileFollowing']);
 
 Route::post('/create-follow/{user:username}', [FollowController::class, 'createFollow'])->middleware('mustBeLoggedIn');
 Route::post('/remove-follow/{user:username}', [FollowController::class, 'removeFollow'])->middleware('mustBeLoggedIn');
