@@ -9,6 +9,7 @@ use Illuminate\Validation\Rule;
 use Intervention\Image\Facades\Image;
 use App\Models\Follow;
 use Illuminate\Support\Facades\View;
+use App\Events\OurExampleEvent;
 
 class UserController extends Controller
 {
@@ -102,6 +103,7 @@ class UserController extends Controller
 
         if (auth()->attempt(['username' => $incomingFields['loginusername'], 'password' => $incomingFields['loginpassword']])) {
             $request->session()->regenerate();
+            event(new OurExampleEvent(['username' => auth()->user()->username, 'action' => 'login']));
             return redirect('/')->with('success', 'You have successfully logged in');
         } else {
             return redirect('/')->with('failure', 'Invalid login');
@@ -110,6 +112,7 @@ class UserController extends Controller
 
     public function logout()
     {
+        event(new OurExampleEvent(['username' => auth()->user()->username, 'action' => 'logout']));
         auth()->logout();
         return redirect('/')->with('success', 'You are now logged out');
     }
