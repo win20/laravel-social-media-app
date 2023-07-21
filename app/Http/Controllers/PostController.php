@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
+use App\Mail\NewPostEmail;
+use Illuminate\Support\Facades\Mail;
 
 class PostController extends Controller
 {
@@ -66,6 +68,8 @@ class PostController extends Controller
         $incomingFields['user_id'] = auth()->id();
 
         $newPost = Post::create($incomingFields);
+
+        Mail::to(auth()->user()->email)->send(new NewPostEmail(['name' => auth()->user()->username, 'title' => $newPost->title]));
 
         return redirect("/post/{$newPost->id}")->with('success', 'New post successfully created');
     }
