@@ -10,6 +10,8 @@ use Intervention\Image\Facades\Image;
 use App\Models\Follow;
 use Illuminate\Support\Facades\View;
 use App\Events\OurExampleEvent;
+use App\Models\Post;
+use Illuminate\Support\Facades\Cache;
 
 class UserController extends Controller
 {
@@ -105,7 +107,12 @@ class UserController extends Controller
         if (auth()->check()) {
             return view('homepage-feed', ['posts' => $request->user()->feedPosts()->latest()->paginate(2)]);
         } else {
-            return view('homepage');
+            $postCount = Cache::remember('postCount', 20, function () {
+                return Post::count();
+            });
+            return view('homepage', [
+                'postCount' => $postCount,
+            ]);
         }
     }
 
