@@ -1,7 +1,7 @@
 # Social Media App - Laravel
 
-Simple social media style web app I made while following a Laravel course. </br>
-Demo: http://learning-laravel.xyz/
+Simple social media style web app I made in order to learn Laravel. </br>
+Demo: https://learning-laravel.winbarua.dev/
 
 ## Built with
 - PHP
